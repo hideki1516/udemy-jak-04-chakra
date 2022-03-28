@@ -2,9 +2,11 @@ import axios from "axios";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { User } from "../types/api/user";
+import { useMessage } from "./useMessage";
 
 export const useAuth = () => {
   const history = useHistory();
+  const { showMessage } = useMessage(); // Toastのコンポーネント
   const [loading, setLoading] = useState(false);
 
   // 不要な再レンダリングを避けるため、関数にuseCallbackを指定
@@ -16,15 +18,22 @@ export const useAuth = () => {
         .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
         .then((res) => {
           if (res.data) {
+            // useMessageコンポーネントのshoeMessageを使用
+            showMessage({ title: "ログインしました", status: "success" });
             history.push("/home");
           } else {
-            alert("ユーザーが見つかりません");
+            showMessage({
+              title: "ユーザーが見つかりません",
+              status: "error",
+            });
           }
         })
-        .catch(() => alert("ログインできません"))
+        .catch(() => {
+          showMessage({ title: "ログインできません", status: "error" });
+        })
         .finally(() => setLoading(false));
     },
-    [history]
+    [history, showMessage]
   );
   return { login, loading };
 };
