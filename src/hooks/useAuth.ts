@@ -20,7 +20,10 @@ export const useAuth = () => {
         .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
         .then((res) => {
           if (res.data) {
-            setLoginUser(res.data);
+            // 疑似的にid=10のuserを管理者にする
+            // id=10の場合はisAdminをtrue、そうでなければfalse
+            const isAdmin = res.data.id === 10 ? true : false;
+            setLoginUser({ ...res.data, isAdmin: isAdmin }); // スプレッド構文でisAdminプロパティを追加
             // useMessageコンポーネントのshoeMessageを使用
             showMessage({ title: "ログインしました", status: "success" });
             history.push("/home");
