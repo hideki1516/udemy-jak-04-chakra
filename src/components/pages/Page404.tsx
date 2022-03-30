@@ -4,7 +4,7 @@ export const Page404 = () => {
   return (
     <div>
       <p>ページが見つかりません</p>
-      <Link to='/'>TOPに戻る</Link>
+      <Link to="/">TOPに戻る</Link>
     </div>
-  )
+  );
 };
